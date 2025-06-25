@@ -11,57 +11,116 @@ import math
 app = dash.Dash(__name__)
 
 app.layout = html.Div(children=[
-    html.H1('Temperature and Humidity Dashboard - LIVE TEST', style={'textAlign': 'center'}),
-    
-    # Debug info
-    html.Div(id='debug-info', style={
-        'textAlign': 'center',
-        'padding': '10px',
-        'marginBottom': '20px',
-        'backgroundColor': '#e8f4fd',
-        'border': '2px solid #2196F3',
-        'borderRadius': '5px'
-    }),
-
-    # Humidity display
+    # Main container for overall page styling
     html.Div([
-        html.Div([
-            html.Div(id='humidity-value', style={
-                'fontSize': '30px',
-                'color': 'white',
-                'textAlign': 'center',
-                'lineHeight': '150px',
-                'fontWeight': 'bold'
-            })
-        ], style={
-            'width': '150px',
-            'height': '150px',
-            'borderRadius': '50%',
-            'background': 'linear-gradient(to top, #4FC3F7 0%, #29B6F6 100%)',
-            'margin': 'auto',
-            'boxShadow': '0 0 15px rgba(0, 123, 255, 0.5)',
-            'display': 'flex',
-            'alignItems': 'center',
-            'justifyContent': 'center'
-        }),
-        html.Div("Humidity", style={
+        # Main Dashboard Title
+        html.H1('Temperature and Humidity Dashboard', style={
             'textAlign': 'center',
-            'marginTop': '10px',
-            'fontSize': '20px',
-            'color': '#333'
-        })
-    ], style={'marginBottom': '40px'}),
+            'color': '#2c3e50',  # Darker blue-grey for heading
+            'marginBottom': '30px',
+            'fontSize': '2.8em',  # Larger font size
+            'fontWeight': '700',  # Bolder
+            'textShadow': '1px 1px 2px rgba(0,0,0,0.1)', # Subtle text shadow
+            'paddingTop': '20px' # Add some top padding
+        }),
+        
+        # Debug info container
+        html.Div(id='debug-info', style={
+            'textAlign': 'center',
+            'padding': '15px',
+            'marginBottom': '30px',  # More space below
+            'backgroundColor': '#e3f2fd',  # Softer blue background
+            'border': '1px solid #90caf9',  # Lighter, subtle border
+            'borderRadius': '8px',  # More rounded corners
+            'boxShadow': '0 2px 4px rgba(0,0,0,0.1)', # Subtle box shadow
+            'color': '#1a237e',  # Dark blue text
+            'maxWidth': '600px',  # Limit width for better readability
+            'margin': '20px auto', # Center horizontally
+            'fontSize': '0.95em'
+        }),
 
-    # Temperature chart
-    dcc.Graph(id='temperature-chart'),
-    
-    # Humidity chart
-    dcc.Graph(id='humidity-chart'),
+        # Humidity display container (circular gauge)
+        html.Div([
+            html.Div([
+                html.Div(id='humidity-value', style={
+                    'fontSize': '38px',  # Larger font for the humidity value
+                    'color': 'white',
+                    'textAlign': 'center',
+                    'lineHeight': '150px', # Keep text vertically centered
+                    'fontWeight': 'bold',
+                    'textShadow': '1px 1px 3px rgba(0,0,0,0.3)' # Text shadow for pop
+                })
+            ], style={
+                'width': '180px',  # Slightly larger circle
+                'height': '180px',
+                'borderRadius': '50%',
+                'background': 'linear-gradient(145deg, #4FC3F7, #2196F3)', # Diagonal gradient for depth
+                'margin': 'auto',
+                'boxShadow': '0 8px 16px rgba(0, 123, 255, 0.3), 0 3px 6px rgba(0, 123, 255, 0.2)', # More prominent shadow
+                'display': 'flex', # Use flexbox to center content
+                'alignItems': 'center',
+                'justifyContent': 'center',
+                'transition': 'all 0.3s ease-in-out' # Smooth transitions for any potential future interactivity
+            }),
+            html.Div("Humidity", style={
+                'textAlign': 'center',
+                'marginTop': '15px',  # More space below the circle
+                'fontSize': '22px',  # Larger font for the label
+                'color': '#555',  # Softer black text
+                'fontWeight': '600' # Bolder text for the label
+            })
+        ], style={'marginBottom': '50px', 'padding': '20px'}), # More space below humidity section, slight padding
 
-    # Fast update for testing
-    dcc.Interval(id='interval', interval=2000, n_intervals=0),  # every 2 seconds
+        # Chart containers for temperature and humidity
+        # Wrapped in a flex container to allow side-by-side display on larger screens
+        html.Div([
+            # Temperature chart container
+            html.Div([
+                dcc.Graph(id='temperature-chart', config={'displayModeBar': False}), # Hide Plotly's default modebar for cleaner look
+            ], style={
+                'flex': '1', # Allow chart to take available space
+                'minWidth': '300px', # Minimum width before wrapping on smaller screens
+                'backgroundColor': '#ffffff', # White background for charts
+                'borderRadius': '10px', # Rounded corners for the chart container
+                'boxShadow': '0 4px 8px rgba(0,0,0,0.1)', # Subtle shadow
+                'padding': '20px',
+                'marginBottom': '30px', # Space between charts if stacked
+                'marginRight': '15px', # Space between charts if side-by-side
+                'flexGrow': 1 # Allow the chart container to grow
+            }),
+            
+            # Humidity chart container
+            html.Div([
+                dcc.Graph(id='humidity-chart', config={'displayModeBar': False}), # Hide Plotly's default modebar
+            ], style={
+                'flex': '1',
+                'minWidth': '300px',
+                'backgroundColor': '#ffffff',
+                'borderRadius': '10px',
+                'boxShadow': '0 4px 8px rgba(0,0,0,0.1)',
+                'padding': '20px',
+                'marginBottom': '30px',
+                'marginLeft': '15px', # Space between charts if side-by-side
+                'flexGrow': 1
+            }),
+        ], style={
+            'display': 'flex',
+            'flexWrap': 'wrap', # Allow charts to wrap to the next line on smaller screens
+            'justifyContent': 'center', # Center items in the flex container
+            'gap': '30px' # Gap between chart containers
+        }),
+
+        # Fast update for testing (no visual changes to this element itself, it's just the interval component)
+        dcc.Interval(id='interval', interval=2000, n_intervals=0), 
+    ], style={
+        'fontFamily': '"Inter", sans-serif', # Apply Inter font - ensure it's loaded in your assets/index.html
+        'backgroundColor': "#092043", # Light grey-blue background for the entire page
+        'color': '#333', # Default text color
+        'padding': '20px',
+        'minHeight': '100vh', # Ensure the page takes at least the full viewport height
+        'boxSizing': 'border-box' # Include padding in element's total width and height
+    })
 ])
-
 def generate_live_data(n_intervals):
     """Generate data that definitely changes every update"""
     now = datetime.now()
