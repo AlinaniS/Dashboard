@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>ESP32 Simulated Dashboard</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background: #f0f4f8;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+    }
+
+    .card {
+      background: white;
+      padding: 2rem 3rem;
+      border-radius: 1rem;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+      text-align: center;
+      max-width: 300px;
+      width: 100%;
+    }
+
+    .title {
+      font-size: 1.5rem;
+      font-weight: 600;
+      margin-bottom: 1.5rem;
+      color: #333;
+    }
+
+    .data {
+      font-size: 1.2rem;
+      margin: 1rem 0;
+      color: #444;
+    }
+
+    .value {
+      font-weight: bold;
+      color: #0077cc;
+    }
+
+    .footer {
+      margin-top: 1.5rem;
+      font-size: 0.8rem;
+      color: #aaa;
+    }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <div class="title">🌡️ ESP32 Sensor Dashboard</div>
+    <div class="data">🌡️ Temperature: <span id="temp" class="value">--</span> °C</div>
+    <div class="data">💧 Humidity: <span id="hum" class="value">--</span> %</div>
+    <div class="footer">Simulated Data - No ESP32 Connected</div>
+  </div>
+
+  <script>
+    const tempEl = document.getElementById("temp");
+    const humEl = document.getElementById("hum");
+
+    const simulateData = () => {
+      const simulatedTemp = (20 + Math.random() * 10).toFixed(1);
+      const simulatedHum = (40 + Math.random() * 20).toFixed(1);
+
+      tempEl.textContent = simulatedTemp;
+      humEl.textContent = simulatedHum;
+    };
+
+    setInterval(simulateData, 2000); // Update every 2 seconds
+    simulateData(); // Initial update
+  </script>
+</body>
+</html>
